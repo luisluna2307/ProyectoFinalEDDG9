@@ -1,16 +1,14 @@
 package edu.estructurasdatos.proyectofinaleddg9;
 
-/**
- *
- * @author Luis Luna
- */
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
 
 public class GrafoVisibilidad {
 
     public static void main(String[] args) {
-        System.setProperty("org.graphstream.ui", "javafx");
+        // Cambiar a swing para evitar problemas de JavaFX
+        System.setProperty("org.graphstream.ui", "swing");
+        System.setProperty("java.awt.headless", "false");
 
         // Crear grafo
         Graph grafo = new SingleGraph("Grafo de Visibilidad");
@@ -23,37 +21,52 @@ public class GrafoVisibilidad {
         agregarNodo(grafo, "v3", 300, 400);
         agregarNodo(grafo, "v4", 300, 300);
 
-        // Conectar nodos manualmente por ahora (visibilidad real se verificará después)
+        // Conectar nodos manualmente por ahora
         conectarNodos(grafo, "start", "v1");
         conectarNodos(grafo, "v1", "v2");
         conectarNodos(grafo, "v2", "v3");
         conectarNodos(grafo, "v3", "v4");
         conectarNodos(grafo, "v4", "goal");
 
-        // Mostrar grafo
+        // Mostrar el grafo
         grafo.display();
     }
 
-    // Método para agregar nodos con coordenadas
     private static void agregarNodo(Graph grafo, String id, double x, double y) {
         Node nodo = grafo.addNode(id);
-        nodo.setAttribute("xy", x, y);
-        nodo.setAttribute("ui.label", id);
+        nodo.setAttribute("xy", x, y);  // Coordenadas
+        nodo.setAttribute("ui.label", id);  // Etiqueta del nodo
     }
 
-    // Método para conectar nodos y calcular distancia
     private static void conectarNodos(Graph grafo, String id1, String id2) {
         Node n1 = grafo.getNode(id1);
         Node n2 = grafo.getNode(id2);
 
-        // Calcular distancia euclidiana
-        double[] coord1 = (double[]) n1.getAttribute("xy");
-        double[] coord2 = (double[]) n2.getAttribute("xy");
-        double distancia = Math.sqrt(Math.pow(coord2[0] - coord1[0], 2) + Math.pow(coord2[1] - coord1[1], 2));
+        if (n1 == null || n2 == null) {
+            System.out.println("Error: Uno o ambos nodos no existen: " + id1 + ", " + id2);
+            return;
+        }
 
-        // Agregar arista con distancia
-        Edge arista = grafo.addEdge(id1 + "-" + id2, id1, id2);
+        double[] coord1 = obtenerCoordenadas(n1);
+        double[] coord2 = obtenerCoordenadas(n2);
+
+        double distancia = Math.sqrt(Math.pow(coord2[0] - coord1[0], 2) + Math.pow(coord2[1] - coord1[1], 2));
+        Edge arista = grafo.addEdge(id1 + "-" + id2, id1, id2, true);
         arista.setAttribute("length", distancia);
         arista.setAttribute("ui.label", String.format("%.2f", distancia));
+    }
+
+    private static double[] obtenerCoordenadas(Node nodo) {
+        Object xy = nodo.getAttribute("xy");
+
+        if (xy instanceof Object[]) {
+            Object[] coords = (Object[]) xy;
+            return new double[]{
+                ((Number) coords[0]).doubleValue(),
+                ((Number) coords[1]).doubleValue()
+            };
+        } else {
+            throw new IllegalStateException("Coordenadas inválidas para el nodo: " + nodo.getId());
+        }
     }
 }
