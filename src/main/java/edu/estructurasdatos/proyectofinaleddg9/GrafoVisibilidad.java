@@ -47,8 +47,8 @@ public class GrafoVisibilidad {
         Node n2 = grafo.getNode(id2);
 
         // Calcular distancia euclidiana
-        double[] coord1 = n1.getAttribute("xy");
-        double[] coord2 = n2.getAttribute("xy");
+        double[] coord1 = (double[]) n1.getAttribute("xy");
+        double[] coord2 = (double[]) n2.getAttribute("xy");
         double distancia = Math.sqrt(Math.pow(coord2[0] - coord1[0], 2) + Math.pow(coord2[1] - coord1[1], 2));
 
         // Agregar arista con distancia
