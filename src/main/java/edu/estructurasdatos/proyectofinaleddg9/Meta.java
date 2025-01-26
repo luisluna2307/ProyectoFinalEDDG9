@@ -17,4 +17,13 @@ public class Meta {
     public String toString() {
         return "Posición (" + x + ", " + y + ")";
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+    
 }

@@ -7,16 +7,27 @@ package edu.estructurasdatos.proyectofinaleddg9;
 public class Robot {
 
     private int x, y;
-    private int diametro;
 
-    public Robot(int x, int y, int diametro) {
+    public Robot(int x, int y) {
         this.x = x;
         this.y = y;
-        this.diametro = diametro;
     }
-
+    
     @Override
     public String toString() {
-        return "Posición (" + x + ", " + y + "), Diámetro: " + diametro;
+        return "Posición (" + x + ", " + y + ")";
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+    
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }
